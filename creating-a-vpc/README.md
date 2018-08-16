@@ -3,9 +3,9 @@
  Creating a VPC
 
 1. Create a VPC - CIDR 10.0.0.0/16. By default a route table, network acl with full access and a security group will be created.
-<p align="center"><src="https://github.com/jkeane13/aws-tutorials/blob/master/creating-a-vpc/img/VPC%20Part%201.png"></p>
 
-![picture](img\simple-vpc.png)
+<p align="center"><src="https://github.com/jkeane13/aws-tutorials/tree/master/creating-a-vpc/img/VPC%20Part%201.png"></p>
+
 2. Create a subnet for public instances - 10.0.1.0/24
 
 3. Create another subnet for private instances - 10.0.2.0/24
