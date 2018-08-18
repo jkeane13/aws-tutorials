@@ -1,39 +1,80 @@
 # Creating a VPC
 
- Creating a VPC
+## Learning networkig in the cloud...
 
-1. Create a VPC - CIDR 10.0.0.0/16. By default a route table, network acl with full access and a security group will be created.
+One of the great things about AWS is the ease it is to build up secure networks that are easy to build and secure. 
 
-  ![image](https://github.com/jkeane13/aws-tutorials/blob/master/creating-a-vpc/img/VPC%20Part%201.png?raw=true)
+## Prequisistes
 
-2. Create a subnet for public instances - 10.0.1.0/24
+### An AWS Account
+You will need an AWS account to be able to build a network. While the VPC, Subnets, Route Tables are all free, the Load Balancer, Elastic IP NAT and any testing EC2 instances are not. After finishing this guide, tear it down to avoid any substantial cost
 
-3. Create another subnet for private instances - 10.0.2.0/24
+## Building a VPC
+A VPC is an network where your instances are going to live.
+Create a VPC and give it a CIDR range of `10.0.0.0/16`. This will give you a lot of available network space to build out your Network
 
-4. Add an internet gateway
+# Network to be accessed by the outside world 
+Now that you have a place where you instances are going to live. We need to create a sub-network inside a network (subnet) where instances you want to be access to the outside world can be accessed
 
-5. Attach the internet gateway to the VPC
+- Go to Subnets
+- use it to 10.0.1.0./24
 
-6. Create a route in the default route table to 0.0.0.0/0 - igw (Internet Gateway)
+Any instances put into this network will be available to the outside world. But how does it get to the outside world?
 
-7. Add the public subnet to the newly create route table
+## An internet gateway!
+An internet gateway to a point in a VPC where you tell you subnet where the gate is to the outside world. All network you want to expose to the outside world, needs an internet gateway!
 
-8. Set the public subnet to assign public IP addresses
+To create one to do 
 
-9. Create an EC2 in the public subnet, with a security to allow port 22 traffic for testing through SSH
+- Add an internet gateway and attach it to the VPC
 
-10. Create a EC2 in the private subnet, with a security group to allow port 22 from *inside the VPC at 10.0.0.0/16*
+### How will the subnet know how connect to the outside world?
 
-11. SSH into the public subnet into the EC2 instance to test network conectivity
+You will needo point a public subnet to the internet gateway our it won't know where it will access the internet and 'route' to it. You can do that through an route table! We can use the default table to create
 
-13. Create a NAT gateway and assign an Elastic IP address
+- Create a route in the default route table to 0.0.0.0/0 - igw (Internet Gateway)
 
-14. Edit the default route table to 0.0.0.0/0
+## Lets test it out!
 
-15. Check internet on the private instance.
+Let's see if we create an EC2 instance is accessable create in EC2 instance, and open up the security groupport 22 and 80 with the following UserData settings
 
-## Network ACL
-Create a NACL. By default, every port will be *denied*. Remember NACLS are _stateless_, meaning you will need to put in inbound and outbound rules
+```
+yum update
+yum install -y httpd
+echo "Hello Web server!" > /var/www/html
+systemctl httpd start
+```
+
+Go to the web address under EC2 instances. You you will be able to connect
+
+## But what if I want private network that can only be accessed from the inside VPC?
+
+You may want to create another subnet that you don't want to be exposed to the outside world, in order to create it
+
+- Create another subnet for private instances - 10.0.2.0/24
+
+## Let's test it out! 
+Build a instance to put it into the private subnet. Notice a public IP is not assigned and the subnet isn't assigned a IP
+
+## If it can't get to the outside world... how can I connect to the internet?
+You may have to run updates or download software, there needs to be way I can do that through the network 
+
+
+### Enter Network Access Translation Gateway! (NAT)
+- Create a NAT gateway in the public subnet. It will ask for a Elastic IP address. An Elastic IP address is a always changing public IP address which will give your private instances a way to securly send traffic in and out a network
+
+-  Edit the default route table to 0.0.0.0/0
+
+### Test it out!
+- Remote back into the instance are you should be able to do updates. 
+
+## Congratulations!
+Congratulations! You have created a network with a public and private subnet! Every instance in the public instance can be access by the outside world!
+
+## Locking it down... 
+To make sure people can't attack open ports on a network. We need to lock down the network so malicious hackers can't access things they shouldn't.
+
+### Network Access Control Lists
 
 ## Example Network ACL
 ### Inbound
@@ -52,4 +93,3 @@ Create a NACL. By default, every port will be *denied*. Remember NACLS are _stat
 |300 | SSH      | 22           | 0.0.0.0/0 |ALLOW       |
 |400 | Custom   | 1024 - 65535 | 0.0.0.0/0 |ALLOW       |
 
-Set the Subnet Association of the NACL to the Public Subnet
