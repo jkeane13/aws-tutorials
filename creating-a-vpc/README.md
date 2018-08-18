@@ -7,10 +7,10 @@ One of the great things about AWS is the ease it is to build up secure networks 
 ## Prequisistes
 
 ### An AWS Account
-You will need an AWS account to be able to build a network. While the VPC, Subnets, Route Tables are all free, the Load Balancer, Elastic IP NAT and any testing EC2 instances are not. After finishing this guide, if you don't use it, tear it down to avoid any substantial cost
+You will need an AWS account to be able to build a network. While the VPC, Subnets, Route Tables are all free, the Load Balancer, Elastic IP NAT and any testing EC2 instances are not. After finishing this guide, tear it down to avoid any substantial cost
 
 ## Building a VPC
-<img align="right" src="img/VPC%20Part%201.png" width="300" height="300">A VPC is an network where your instances are going to live.
+A VPC is an network where your instances are going to live.
 Create a VPC and give it a CIDR range of `10.0.0.0/16`. This will give you a lot of available network space to build out your Network
 
 # Network to be accessed by the outside world 
@@ -53,12 +53,12 @@ You may want to create another subnet that you don't want to be exposed to the o
 
 - Create another subnet for private instances - 10.0.2.0/24
 
-
 ## Let's test it out! 
 Build a instance to put it into the private subnet. Notice a public IP is not assigned and the subnet isn't assigned a IP
 
 ## If it can't get to the outside world... how can I connect to the internet?
 You may have to run updates or download software, there needs to be way I can do that through the network 
+
 
 ### Enter Network Access Translation Gateway! (NAT)
 - Create a NAT gateway in the public subnet. It will ask for a Elastic IP address. An Elastic IP address is a always changing public IP address which will give your private instances a way to securly send traffic in and out a network
