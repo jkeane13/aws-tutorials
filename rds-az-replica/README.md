@@ -17,12 +17,8 @@ Read Replica are a duplicate of the primary database. It is used to reduce the a
 - Can be promoted to be its own database
 
 ## Comparison Table
----------------------------
-| Multi AZ | Read Replica |
----------------------------
-| Synchonous | Asynchronous |
----------------------------
+| Multi AZ          | Read Replica         |
+|-------------------|----------------------|
+| Synchonous        | Asynchronous         |
 | Used for Failover | Used for Performance |
----------------------------
-| Single Endpoint | Multi Endpoints |
----------------------------
+| Single Endpoint   | Multi Endpoints      |
